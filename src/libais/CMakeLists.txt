@@ -33,10 +33,14 @@ ais27.cpp
 decode_body.cpp
 vdm.cpp
 )
-target_include_directories(ais PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-set_target_properties(ais PROPERTIES PUBLIC_HEADER "ais.h;vdm.h")
-
 include(GNUInstallDirs)
+
+target_include_directories(ais PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+set_target_properties(ais PROPERTIES PUBLIC_HEADER "ais.h;vdm.h")
 
 install(TARGETS ais
   EXPORT LibaisConfig
@@ -45,6 +49,24 @@ install(TARGETS ais
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
+install(
+  EXPORT LibaisConfig
+  FILE
+    libaisTARGETS.cmake
+  DESTINATION
+    ${CMAKE_INSTALL_LIBDIR}/cmake/libais
+  NAMESPACE
+    libais::
+ ) 
+
+install(
+  FILES
+    ${CMAKE_CURRENT_LIST_DIR}/libaisConfig.cmake
+  DESTINATION
+    ${CMAKE_INSTALL_LIBDIR}/cmake/libais
+)
+
 
 # Not yet handled:
 # ais_py.cpp
